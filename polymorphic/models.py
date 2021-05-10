@@ -16,6 +16,9 @@ from .base import PolymorphicModelBase
 from .managers import PolymorphicManager
 from .query_translate import translate_polymorphic_Q_object
 
+from django.conf import settings
+ctype_db_column = settings.DEFAULT_POLYMORPHIC_CTYPE_DB_COLUMN if hasattr( settings, 'DEFAULT_POLYMORPHIC_CTYPE_DB_COLUMN') else 'polymorphic_ctype_id'
+
 ###################################################################################
 # PolymorphicModel
 
@@ -43,13 +46,17 @@ class PolymorphicModel(with_metaclass(PolymorphicModelBase, models.Model)):
     # for PolymorphicQuery, True => an overloaded __repr__ with nicer multi-line output is used by PolymorphicQuery
     polymorphic_query_multiline_output = False
 
+
+    '''
     # avoid ContentType related field accessor clash (an error emitted by model validation)
     #: The model field that stores the :class:`~django.contrib.contenttypes.models.ContentType` reference to the actual class.
+    '''
     polymorphic_ctype = models.ForeignKey(
         ContentType,
         null=True,
         editable=False,
         on_delete=models.CASCADE,
+        db_column=ctype_db_column,   # (FX) Added ! Get the field name from the django settings !
         related_name="polymorphic_%(app_label)s.%(class)s_set+",
     )
 
