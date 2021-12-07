@@ -36,7 +36,7 @@ class PolymorphicModel(with_metaclass(PolymorphicModelBase, models.Model)):
     PolymorphicModel declares one field for internal use (:attr:`polymorphic_ctype`)
     and provides a polymorphic manager as the default manager (and as 'objects').
     """
-
+            
     # for PolymorphicModelBase, so it can tell which models are polymorphic and which are not (duck typing)
     polymorphic_model_marker = True
 
